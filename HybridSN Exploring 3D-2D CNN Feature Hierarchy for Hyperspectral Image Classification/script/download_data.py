@@ -151,38 +151,116 @@ def format_size(num_bytes: int) -> str:
     return f"{size:.1f} GiB"
 
 
-def download_file(url: str, destination: Path, timeout: int) -> int:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    downloaded = 0
+import re
+import time
+import urllib.request
+from pathlib import Path
+
+USER_AGENT = "Mozilla/5.0"
+CHUNK_SIZE = 1024 * 1024  # 1 MiB
+
+
+def format_size(num_bytes: int) -> str:
+    mib = num_bytes / (1024 * 1024)
+    return f"{mib:.1f} MiB"
+
+
+def _parse_total_size(response) -> int | None:
+    content_range = response.headers.get("Content-Range")
+    if content_range:
+        # Example: bytes 100-999/12345
+        m = re.match(r"bytes\s+\d+-\d+/(\d+|\*)", content_range)
+        if m and m.group(1).isdigit():
+            return int(m.group(1))
+
+    content_length = response.headers.get("Content-Length")
+    if content_length and content_length.isdigit():
+        return int(content_length)
+
+    return None
+
+
+def download_file(url: str, destination: Path, timeout: int, max_retries: int = 5) -> int:
     destination.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = destination.with_suffix(destination.suffix + ".part")
 
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response, tmp_path.open("wb") as out:
-            total_header = response.headers.get("Content-Length")
-            total_bytes = int(total_header) if total_header and total_header.isdigit() else None
-            while True:
-                chunk = response.read(CHUNK_SIZE)
-                if not chunk:
-                    break
-                out.write(chunk)
-                downloaded += len(chunk)
-                if total_bytes:
-                    pct = downloaded / total_bytes * 100
-                    print(
-                        f"\r      {format_size(downloaded)} / {format_size(total_bytes)} ({pct:5.1f}%)",
-                        end="",
-                        flush=True,
-                    )
-                else:
-                    print(f"\r      {format_size(downloaded)}", end="", flush=True)
-        print()
-        tmp_path.replace(destination)
-        return downloaded
-    except Exception:
-        if tmp_path.exists():
-            tmp_path.unlink()
-        raise
+    last_error = None
+    total_bytes = None
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            existing_size = tmp_path.stat().st_size if tmp_path.exists() else 0
+
+            headers = {
+                "User-Agent": USER_AGENT,
+                "Accept-Encoding": "identity",
+            }
+
+            if existing_size > 0:
+                headers["Range"] = f"bytes={existing_size}-"
+
+            request = urllib.request.Request(url, headers=headers)
+
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                status = getattr(response, "status", response.getcode())
+
+                # If server ignored Range and sent full file, restart from scratch.
+                if existing_size > 0 and status != 206:
+                    tmp_path.unlink(missing_ok=True)
+                    existing_size = 0
+
+                mode = "ab" if existing_size > 0 and status == 206 else "wb"
+
+                response_total = _parse_total_size(response)
+
+                # For 206 responses, _parse_total_size returns the full file size from Content-Range.
+                # For 200 responses, Content-Length is only the current response body size.
+                if status == 206:
+                    total_bytes = response_total
+                elif status == 200 and response_total is not None:
+                    total_bytes = response_total
+
+                downloaded = existing_size
+
+                with tmp_path.open(mode) as out:
+                    while True:
+                        chunk = response.read(CHUNK_SIZE)
+                        if not chunk:
+                            break
+                        out.write(chunk)
+                        downloaded += len(chunk)
+
+                        if total_bytes:
+                            pct = downloaded / total_bytes * 100
+                            print(
+                                f"\r      {format_size(downloaded)} / {format_size(total_bytes)} ({pct:5.1f}%)",
+                                end="",
+                                flush=True,
+                            )
+                        else:
+                            print(f"\r      {format_size(downloaded)}", end="", flush=True)
+
+            print()
+
+            final_size = tmp_path.stat().st_size
+
+            if total_bytes is not None and final_size != total_bytes:
+                raise IOError(
+                    f"Incomplete download: got {final_size} bytes, expected {total_bytes} bytes"
+                )
+
+            tmp_path.replace(destination)
+            return final_size
+
+        except Exception as exc:
+            last_error = exc
+            print(f"\n    Attempt {attempt}/{max_retries} failed: {exc}")
+
+            # Keep partial file for resume on next attempt.
+            if attempt < max_retries:
+                time.sleep(min(2 ** (attempt - 1), 8))
+
+    raise last_error
 
 
 
