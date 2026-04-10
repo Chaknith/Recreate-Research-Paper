@@ -82,7 +82,7 @@ The number of node in the last dense layer depends on the classes of the dataset
 The total number of trainable weight parameters in HybridSN are
 - IP: 5,122,176
 - UP: 4,844,793
-- SA: 5,122,176
+- SA: 4,845,696
 
 ## Training
 
