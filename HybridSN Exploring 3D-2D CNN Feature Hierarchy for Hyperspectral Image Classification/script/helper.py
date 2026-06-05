@@ -16,7 +16,6 @@ DATASETS: Dict[str, Dict[str, object]] = {
         "gt_file": "Indian_pines_gt.mat",
         "data_key": "indian_pines_corrected",
         "gt_key": "indian_pines_gt",
-        "pca": 15,
         "class_name": ['Alfalfa','Corn-notill','Corn-mintill','Corn','Grass-pasture',
         'Grass-trees','Grass-pasture-mowed','Hay-windrowed','Oats','Soybean-notill',
         'Soybean-mintill','Soybean-clean','Wheat','Woods','Buildings-Grass-Trees-Drives',
@@ -29,7 +28,6 @@ DATASETS: Dict[str, Dict[str, object]] = {
         "gt_file": "PaviaU_gt.mat",
         "data_key": "paviaU",
         "gt_key": "paviaU_gt",
-        "pca": 15,
         "class_name": ['Asphalt','Meadows','Gravel','Trees','Painted metal sheets',
         'Bare Soil','Bitumen','Self-Blocking Bricks','Shadows']
     },
@@ -40,7 +38,6 @@ DATASETS: Dict[str, Dict[str, object]] = {
         "gt_file": "Salinas_gt.mat",
         "data_key": "salinas_corrected",
         "gt_key": "salinas_gt",
-        "pca": 15,
         "class_name": ['Brocoli_green_weeds_1','Brocoli_green_weeds_2','Fallow',
         'Fallow_rough_plow','Fallow_smooth','Stubble','Celery','Grapes_untrained',
         'Soil_vinyard_develop','Corn_senesced_green','Lettuce_romaine_4wk',
