@@ -13,9 +13,21 @@ There is some differences in author's tensorflow, PyTorch version, and my recrea
 4. Split the data into 30 train and 70 test
 - Split seed is 345
 
-**Result**
+**Result in Paper**
+IP
+OA: 99.75 ± 0.1
+AA: 99.71 ± 0.1
+Kappa: 99.63 ± 0.2
 
-OA: 99.81
+UP
+OA: 99.98 ± 0.0
+AA: 99.98 ± 0.0
+Kappa: 99.97 ± 0.0
+
+SA
+OA: 100 ± 0.0
+AA: 100 ± 0.0
+Kappa: 100 ± 0.0
 
 ### Pytorch Version
 
@@ -29,19 +41,19 @@ OA: 99.81
 
 **Result**
 IP
-OA: 99.41
-AA: 99.32
-Kappa: 99.33
+OA: 99.29 ± 0.56
+AA: 98.51 ± 1.40
+Kappa: 99.19 ± 0.64
 
 UP
-OA: 99.93
-AA: 99.87
-Kappa: 99.90
+OA: 99.96 ± 0.02
+AA: 99.91 ± 0.06
+Kappa: 99.94 ± 0.03
 
 SA
-OA: 99.99
-AA: 99.98
-Kappa: 99.99
+OA: 100 ± 0.00
+AA: 100 ± 0.01
+Kappa: 100 ± 0.01
 
 ### My Recreation
 
@@ -54,19 +66,19 @@ Kappa: 99.99
 
 **Result**
 IP
-OA: 99.53
-AA: 99.34
-Kappa: 99.46
+OA: 99.37 ± 0.35
+AA: 98.27 ± 1.36
+Kappa: 99.28 ± 0.40
 
 UP
-OA: 99.97
-AA: 99.92
-Kappa: 99.96
+OA: 99.97 ± 0.03
+AA: 99.91 ± 0.07
+Kappa: 99.96 ± 0.03
 
 SA
-OA: 100.00
-AA: 99.99
-Kappa: 100.00
+OA: 99.99 ± 0.01
+AA: 99.99 ± 0.01
+Kappa: 99.99 ± 0.01
 
 To understand the model further let's test it out under different conditions.
 
