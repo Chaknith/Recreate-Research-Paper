@@ -50,7 +50,7 @@ The experiments were run in Ubuntu 22.04 via Windows Subsystem for Linux (WSL).
 The following software environment was used:
 
 - Python 3.10.12
-- PyTorch 2.7.1
+- PyTorch 2.7.1 + CUDA 11.8
 - scikit-learn 1.7.2
 - NumPy 2.2.6
 
@@ -61,5 +61,4 @@ All experiments were run on a desktop with the following hardware:
 - CPU: AMD Ryzen 7 5700X
 - GPU: NVIDIA GeForce RTX 3090 Ti, 24 GB
 - NVIDIA driver version: 595.79
-- CUDA version: 13.2
 - RAM: 32 GB
