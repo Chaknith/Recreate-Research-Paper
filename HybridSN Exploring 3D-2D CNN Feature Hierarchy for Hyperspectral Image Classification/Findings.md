@@ -16,8 +16,8 @@ There is some differences in author's tensorflow, PyTorch version, and my recrea
 **Result in Paper**
 | Dataset |            OA |            AA |         Kappa |
 | ------- | ------------: | ------------: | ------------: |
-| IP      |  99.75 ± 0.10 |  99.71 ± 0.10 |  99.63 ± 0.20 |
-| UP      |  99.98 ± 0.00 |  99.98 ± 0.00 |  99.97 ± 0.00 |
+| IP      |  99.75 ± 0.10 |  99.63 ± 0.20 |  99.71 ± 0.10 |
+| UP      |  99.98 ± 0.00 |  99.97 ± 0.00 |  99.98 ± 0.00 |
 | SA      | 100.00 ± 0.00 | 100.00 ± 0.00 | 100.00 ± 0.00 |
 
 ### Pytorch Version
