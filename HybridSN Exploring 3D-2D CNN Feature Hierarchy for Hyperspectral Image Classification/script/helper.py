@@ -8,6 +8,11 @@ import torch.nn as nn
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
+# Imports to generate split visualisation images
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.patches import Patch
+
 DATASETS: Dict[str, Dict[str, object]] = {
     "IP": {
         "folder": "IP",
@@ -595,3 +600,92 @@ def patch_indices_from_split_indices(patch_positions, split_positions, selected_
     ]
 
     return np.asarray(patch_indices, dtype=np.int64)
+
+# help methods to generate split visualisation images
+def build_split_maps(gt, positions, train_idx, val_idx, test_idx):
+    """
+    Create:
+    1. split_map: 0=background, 1=train, 2=validation, 3=test
+    2. train_class_map: original class labels only for training pixels
+    3. val_class_map: original class labels only for validation pixels
+    4. test_class_map: original class labels only for testing pixels
+    """
+    split_map = np.zeros_like(gt, dtype=np.uint8)
+
+    train_class_map = np.zeros_like(gt, dtype=np.int32)
+    val_class_map = np.zeros_like(gt, dtype=np.int32)
+    test_class_map = np.zeros_like(gt, dtype=np.int32)
+
+    train_pos = positions[train_idx]
+    val_pos = positions[val_idx]
+    test_pos = positions[test_idx]
+
+    # Combined split map
+    split_map[train_pos[:, 0], train_pos[:, 1]] = 1
+    split_map[val_pos[:, 0], val_pos[:, 1]] = 2
+    split_map[test_pos[:, 0], test_pos[:, 1]] = 3
+
+    # Individual class maps for each split
+    train_class_map[train_pos[:, 0], train_pos[:, 1]] = gt[train_pos[:, 0], train_pos[:, 1]]
+    val_class_map[val_pos[:, 0], val_pos[:, 1]] = gt[val_pos[:, 0], val_pos[:, 1]]
+    test_class_map[test_pos[:, 0], test_pos[:, 1]] = gt[test_pos[:, 0], test_pos[:, 1]]
+
+    return split_map, train_class_map, val_class_map, test_class_map
+
+
+def save_split_overview(split_map, save_path, title="Train / Validation / Test Split"):
+    """
+    Save one image showing which pixels are train, validation, and test.
+    """
+    cmap = ListedColormap([
+        "black",      # background
+        "tab:blue",   # train
+        "tab:orange", # validation
+        "tab:green",  # test
+    ])
+
+    norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
+
+    plt.figure(figsize=(7, 7))
+    plt.imshow(split_map, cmap=cmap, norm=norm, interpolation="nearest")
+    plt.title(title)
+    plt.axis("off")
+
+    legend_elements = [
+        Patch(facecolor="black", label="Background"),
+        Patch(facecolor="tab:blue", label="Training"),
+        Patch(facecolor="tab:orange", label="Validation"),
+        Patch(facecolor="tab:green", label="Testing"),
+    ]
+
+    plt.legend(
+        handles=legend_elements,
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.08),
+        ncol=4,
+        frameon=False,
+    )
+
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.close()
+
+
+def save_class_map(class_map, save_path, title, num_classes):
+    """
+    Save one image showing the original class labels for only one split.
+    Background and unused pixels remain 0.
+    """
+    plt.figure(figsize=(7, 7))
+    plt.imshow(
+        class_map,
+        cmap="nipy_spectral",
+        vmin=0,
+        vmax=num_classes,
+        interpolation="nearest",
+    )
+    plt.title(title)
+    plt.axis("off")
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.close()

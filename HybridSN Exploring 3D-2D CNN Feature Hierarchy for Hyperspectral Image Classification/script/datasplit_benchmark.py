@@ -1,4 +1,4 @@
-from helper import DATASETS, load_hsi_data, apply_pca, create_patches_with_positions, block_split_indices_class_aware, HSIDataset, HybridSN, train_one_epoch, evaluate, predict_loader
+from helper import DATASETS, load_hsi_data, apply_pca, create_patches_with_positions, block_split_indices_class_aware, HSIDataset, HybridSN, train_one_epoch, evaluate, predict_loader, build_split_maps, save_split_overview, save_class_map
 import os
 import random
 import torch
@@ -24,7 +24,7 @@ LR = 0.001          # learning rate
 WEIGHT_DECAY = 1e-6  
 BATCH_SIZE = 256
 DEVICE = 0          # -1:CPU  0:cuda 0
-N_PCA = 50
+N_PCA = 15
 PATCH_SIZE = 25
 DROP_OUT = 0.4
 # Block size 1, 3, 5
@@ -103,6 +103,45 @@ for seed in seeds:
         seed=seed,
         num_classes=NUM_CLASS,
     )
+
+    # # Save split visualisations.
+    # split_vis_dir = save_dir / f"split_maps_block{BLOCK_SIZE}_seed{seed}"
+    # split_vis_dir.mkdir(parents=True, exist_ok=True)
+
+    # split_map, train_class_map, val_class_map, test_class_map = build_split_maps(
+    #     gt=y,
+    #     positions=positions,
+    #     train_idx=train_idx,
+    #     val_idx=val_idx,
+    #     test_idx=test_idx,
+    # )
+
+    # save_split_overview(
+    #     split_map,
+    #     split_vis_dir / f"{DATASET}_split_overview_block{BLOCK_SIZE}_seed{seed}.png",
+    #     title=f"{DATASET} Block Split Overview, block size = {BLOCK_SIZE}, seed = {seed}",
+    # )
+
+    # save_class_map(
+    #     train_class_map,
+    #     split_vis_dir / f"{DATASET}_train_pixels_block{BLOCK_SIZE}_seed{seed}.png",
+    #     title=f"{DATASET} Training Pixels",
+    #     num_classes=NUM_CLASS,
+    # )
+
+    # save_class_map(
+    #     val_class_map,
+    #     split_vis_dir / f"{DATASET}_validation_pixels_block{BLOCK_SIZE}_seed{seed}.png",
+    #     title=f"{DATASET} Validation Pixels",
+    #     num_classes=NUM_CLASS,
+    # )
+
+    # save_class_map(
+    #     test_class_map,
+    #     split_vis_dir / f"{DATASET}_testing_pixels_block{BLOCK_SIZE}_seed{seed}.png",
+    #     title=f"{DATASET} Testing Pixels",
+    #     num_classes=NUM_CLASS,
+    # )
 
     X_train, y_train = X_all[train_idx], y_all[train_idx]
     X_val, y_val = X_all[val_idx], y_all[val_idx]
@@ -198,7 +237,7 @@ for seed in seeds:
 
     print(report_log)
 
-## Save all the data into text file
+# Save all the data into text file
 with open(os.path.join(benchmark_results_name), "w") as fp:
     fp.write("# Auto-generated benchmark results\n")
     fp.write(config_comment + "\n")
