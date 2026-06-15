@@ -42,3 +42,23 @@ python3 download_data.py
 - [datasplit_benchmark.py](script/datasplit_benchmark.py): Splits the data by spatial blocks instead of individual pixels.
 - [pca_control_benchmark.py](script/pca_control_benchmark.py): Fits PCA using only the training data, then applies the transformation to the validation and test sets.
 - [calculate_sd.py](script/calculate_sd.py): Calculates the standard deviation of the benchmark results.
+
+## Software Environment
+
+The experiments were run in Ubuntu 22.04 via Windows Subsystem for Linux (WSL).
+
+The following software environment was used:
+
+- Python 3.10.12
+- PyTorch 2.7.1 + CUDA 11.8
+- scikit-learn 1.7.2
+- NumPy 2.2.6
+
+## Hardware Environment
+
+All experiments were run on a desktop with the following hardware:
+
+- CPU: AMD Ryzen 7 5700X
+- GPU: NVIDIA GeForce RTX 3090 Ti, 24 GB
+- NVIDIA driver version: 595.79
+- RAM: 32 GB

@@ -51,7 +51,7 @@ A 2D-CNN is computationally simpler, but it cannot directly capture spectral rel
 
 ## Model
 
-![Model overview](Model_overview.png)
+![Model overview](pictures/Model_overview.png)
 
 **Input Patch Size and PCA**
 
@@ -117,7 +117,7 @@ number of filters × kernel height × kernel width × number of input feature ma
 ## Output shape
 
 Output shape for IP & SA:
-![Output shape](Output_shape.png)
+![Output shape](pictures/Output_shape.png)
 
 The number of nodes in the final dense layer depends on the number of classes in each dataset:
 

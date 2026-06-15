@@ -7,15 +7,20 @@
 # Then install the rest with:
 #   pip install -r requirements.txt
 
-numpy>=1.26,<3
-scipy>=1.13,<2
-scikit-learn>=1.5,<2
-scikit-image>=0.24,<1
-matplotlib>=3.9,<4
-tqdm>=4.66,<5
-spectral>=0.23,<1
-imageio>=2.34,<3
-joblib>=1.4,<2
-h5py>=3.11,<4
+# Core scientific stack
+numpy==2.2.6
+scipy==1.15.3
+scikit-learn==1.7.2
 
-torchinfo>=1.8,<2
+# Deep learning
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.7.1+cu118
+
+# HSI / model utilities
+spectral==0.24
+torchinfo==1.8.0
+tqdm==4.67.1
+
+# Optional: useful for result tables/plots
+pandas==2.3.3
+matplotlib==3.10.8
