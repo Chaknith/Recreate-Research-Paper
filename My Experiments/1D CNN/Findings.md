@@ -78,4 +78,6 @@ Epoch 024/100 | Train Loss: 0.3949 | Train Acc: 0.8538 | Val Loss: 6.6348 | Val 
 ```
 
 Also the model only perdict Meadows and Trees classes.
-I'm not sure how to make the model generalize across different classes. 
+I'm not sure how to make the model generalize across different classes.
+
+Try adding SVM to the last step, but it still does not help.
