@@ -1,12 +1,11 @@
 # HybridSN
 
-This repository recreates the HybridSN implementation and runs benchmark experiments under different configurations.
+This repository recreates the [HybridSN paper](https://arxiv.org/abs/1902.06701) and runs benchmark experiments under different configurations.
 
 - **[Detailed Summary of the Paper](<Paper's summary.md>)**
 - **[Findings Note](<Findings.md>)**
 
-Official GitHub repositories:
-
+***Official GitHub repositories***:
 - TensorFlow version: <https://github.com/gokriznastic/HybridSN>
 - PyTorch version: <https://github.com/Pancakerr/HybridSN>
 

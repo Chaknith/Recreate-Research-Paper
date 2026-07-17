@@ -7,13 +7,11 @@ This summary is based on information from the published paper: [Pixel-Wise Class
 - [Introduction](#introduction)
 - [Datasets](#datasets)
 - [Model](#model)
-  - [3D CNN Layers](#3d-cnn-layers)
-  - [2D CNN Layer](#2d-cnn-layer)
-- [Output Shape](#output-shape)
+- [Parameter](#parameter)
 - [Training](#training)
+  - [SVM Filters](#svm-filters)
 - [Hardware](#hardware)
 - [Results](#results)
-  - [Benchmarking Tool](#benchmarking-tool)
 
 ## Introduction
 
